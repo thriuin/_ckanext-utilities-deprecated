@@ -1,0 +1,12 @@
+ckanext_utilities.egg-info
+*.pyc
+.project
+.pydevproject
+build
+dist
+*.swp
+*.ini
+.DS_Store
+
+*.prefs
+
