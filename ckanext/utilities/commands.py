@@ -13,7 +13,7 @@ class UtilCommand(CkanCommand):
 
         Usage::
 
-            paster canada org_datasets  -g <organization> [-r <remote server>] ][-c <configuration file>]
+            paster ckan_util org_datasets  -g <organization> [-r <remote server>] ][-c <configuration file>]
                           del_datasets  -f <source_file> [-a <apikey>] [-r <remote server>] [-c <configuration file>]
                           report_raw_datasets -f <source_file> [-r <remote server>] ][-c <configuration file>]
         Options::
@@ -27,7 +27,7 @@ class UtilCommand(CkanCommand):
 
         Examples::
 
-            paster ckan_util extract_datasets -f myreport.csv -r http://open.data.org/data/
+            paster ckan_util report_raw_datasets -f myreport.csv -r http://open.data.org/data/
 
     """
     summary = __doc__.split('\n')[0]
@@ -60,7 +60,10 @@ class UtilCommand(CkanCommand):
 
       ckan_server = None
       if self.options.remote <> 'localhost':
-        ckan_server = ckanapi.RemoteCKAN(self.options.remote)
+        if self.options.apikey:
+          ckan_server = ckanapi.RemoteCKAN(self.options.remote, apikey=self.options.apikey)
+        else:
+          ckan_server = ckanapi.RemoteCKAN(self.options.remote)
       else:
         ckan_server = ckanapi.LocalCKAN()
 
