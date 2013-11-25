@@ -25,7 +25,7 @@ setup(
 	entry_points=\
 	"""
 	[paste.paster_command]
-	ckan_util=ckanext.utilities.commands:UtilCommand
+	utility=ckanext.utilities.commands:UtilCommand
         [ckan.plugins]
 	# Add plugins here, eg
 	# myplugin=ckanext.utilities:PluginClass
