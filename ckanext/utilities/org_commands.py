@@ -39,7 +39,7 @@ def get_datasets(organization, catalog_type = None):
             start_row += _rows
             count -= _rows
 
-def move_datasets(org_from, org_to):
+def move_datasets(org_from, org_to, verbose=False):
     """Move all the datasets from one organization to another."""
 
     global _ckan_server, _rows
@@ -60,4 +60,6 @@ def move_datasets(org_from, org_to):
         package = _ckan_server.action.package_show(id=ds['id'])
         package['owner_org'] = org_to
         _ckan_server.action.package_update(**package)
+        if verbose:
+            print "Moved %s" % ds['id']
 

@@ -17,7 +17,8 @@ class UtilCommand(CkanCommand):
         Usage::
 
             paster utility org-datasets  -g <organization> [-r <remote server>] ][-c <configuration file>]
-                           move-org-datasets -1 <organization> -2 <organization> [-r <remote server>] ][-c <configuration file>]
+                           move-org-datasets -1 <organization> -2 <organization> [-r <remote server>] ]
+                                [-c <configuration file>][-v]
                            del-datasets  -f <source_file> [-a <apikey>] [-r <remote server>] [-c <configuration file>]
                            report-raw-datasets -f <source_file> [-r <remote server>] ][-c <configuration file>]
         Options::
@@ -31,6 +32,7 @@ class UtilCommand(CkanCommand):
             -r/--remote_server <remote server>  Remote CKAN server to connect to. Default: "localhost"
                                                 Be sure to use the prefix in the server name e.g. http://data.gc.ca
             -c/--config <configuration file>    Paster configuration file
+            -v/--verbose                        Display status messages while processing command
 
         Examples::
 
@@ -89,7 +91,7 @@ class UtilCommand(CkanCommand):
 
         elif cmd == 'move-org-datasets':
             if self.options.org_from and self.options.org_to:
-                org_commands.move_datasets(self.options.org_from, self.options.org_to)
+                org_commands.move_datasets(self.options.org_from, self.options.org_to, self.options.verbose)
             else:
                 print self.usage
 
