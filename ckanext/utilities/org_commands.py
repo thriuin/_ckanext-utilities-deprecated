@@ -3,6 +3,7 @@ from ckan.logic.validators import isodate, boolean_validator
 from ckanext.canada.metadata_schema import schema_description
 from ckanext.canada.navl_schema import convert_pilot_uuid_list
 from ckan.lib.navl.dictization_functions import Invalid
+import simplejson as json
 
 __author__ = 'Ross Thompson'
 
@@ -62,4 +63,22 @@ def move_datasets(org_from, org_to, verbose=False):
         _ckan_server.action.package_update(**package)
         if verbose:
             print "Moved %s" % ds['id']
+
+def delete_organization(org_id):
+    """Delete an organization. Note that this does not purge the organization from CKAN"""
+
+    global _ckan_server
+    try:
+        org_info = _ckan_server.action.organization_show(id=org_id)
+        if org_info['state'] == 'deleted':
+            print "Organization %s is already deleted" % org_id
+            return
+        _ckan_server.action.organization_delete(id=org_info['id'])
+        org_info = _ckan_server.action.organization_show(id=org_id)
+        if org_info['state'] == 'deleted':
+            print "Deleted organization %s" % org_id
+        else:
+            print json.dumps(org_info, indent=2 * ' ')
+    except NotFound, e:
+        print "Cannot find organization %s" % org_id
 

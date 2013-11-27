@@ -16,22 +16,23 @@ class UtilCommand(CkanCommand):
 
         Usage::
 
-            paster utility org-datasets  -g <organization> [-r <remote server>] ][-c <configuration file>]
+            paster utility org-datasets  -i <organization> [-r <remote server>] ][-c <configuration file>]
                            move-org-datasets -1 <organization> -2 <organization> [-r <remote server>] ]
                                 [-c <configuration file>][-v]
+                           delete-org -i <organization>
                            del-datasets  -f <source_file> [-a <apikey>] [-r <remote server>] [-c <configuration file>]
                            report-raw-datasets -f <source_file> [-r <remote server>] ][-c <configuration file>]
         Options::
 
+            -1/--org_from <organization>        From Organization ID
+            -2/--org_to <organization>          To Organization ID
             -a/--apikey <apikey>                push to <remote server> using apikey
-            -g/--org <organization>             Organization ID e.g. ec
-            -g1/--org_from <organization>       From Organization ID
-            -g2/--org_to <organization>         To Organization ID
+            -c/--config <configuration file>    Paster configuration file
             -f/--file <src_file>                Text file. For del_datasets this is list of package ID's.
                                                 For report_raw_datasets this is the CSV file that is generated.
+            -i/--org <organization>             Organization ID e.g. ec
             -r/--remote_server <remote server>  Remote CKAN server to connect to. Default: "localhost"
                                                 Be sure to use the prefix in the server name e.g. http://data.gc.ca
-            -c/--config <configuration file>    Paster configuration file
             -v/--verbose                        Display status messages while processing command
 
         Examples::
@@ -46,13 +47,14 @@ class UtilCommand(CkanCommand):
 
     parser.add_option('-a', '--apikey', dest='apikey', default=None)
     parser.add_option('-r', '--remote_server', dest='remote', default='localhost')
-    parser.add_option('-g', '--org', dest='organization', default='*')
+    parser.add_option('-i', '--org', dest='organization', default='*')
     parser.add_option('-1', '--org_from', dest='org_from', default=None)
     parser.add_option('-2', '--org_to', dest='org_to', default=None)
     parser.add_option('-f', '--file', dest='src_file', default='')
     parser.add_option('-c', '--config', dest='config',
                       default='development.ini', help='Configuration file to use.')
     parser.add_option('-G', '--geo', dest='geo_only', action='store_true')
+
 
     res_types = schema_description.resource_field_by_id['resource_type']['choices_by_key']
     langs = schema_description.resource_field_by_id['language']['choices_by_key']
@@ -94,6 +96,12 @@ class UtilCommand(CkanCommand):
                 org_commands.move_datasets(self.options.org_from, self.options.org_to, self.options.verbose)
             else:
                 print self.usage
+
+        elif cmd == 'delete-org':
+            if self.options.organization == '*':
+                print "Please provide a valid organization ID"
+            else:
+                org_commands.delete_organization(self.options.organization)
 
         elif cmd == 'del-datasets':
 
